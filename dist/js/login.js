@@ -1,8 +1,10 @@
-import { postData } from "./components/post-data.js";
+import { apiCall } from "./components/api.js";
+import { storeUser } from "./components/storage.js";
 
 const form = document.querySelector("form");
 const email = document.querySelector(".email");
 const password = document.querySelector(".password");
+const errorContainer = document.querySelector(".error");
 
 form.onsubmit = async (e) => {
   e.preventDefault();
@@ -17,11 +19,16 @@ form.onsubmit = async (e) => {
   };
 
   try {
-    const response = await postData(
+    const response = await apiCall(
       "https://nf-api.onrender.com/api/v1/social/auth/login",
       options
     );
-    localStorage.setItem("token", response.accessToken);
+
+    storeUser(response);
     location.assign("../profile.html");
-  } catch (error) {}
+  } catch (error) {
+    const errorMessage = JSON.parse(localStorage.getItem("error")).message;
+    errorContainer.innerText = errorMessage;
+    localStorage.removeItem("error");
+  }
 };
