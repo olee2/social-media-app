@@ -4,11 +4,9 @@ import { getUser } from "./storage.js";
 // If not, the user is redirected to login
 
 export const loggedIn = () => {
-  const token = getUser().accessToken;
-
-  if (!token) {
+  try {
+    return getUser().accessToken;
+  } catch (error) {
     location.assign("../login.html");
-  } else {
-    return token;
   }
 };

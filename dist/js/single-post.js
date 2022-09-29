@@ -21,11 +21,17 @@ apiCall(
   options
 )
   .then((response) => {
-    const { title, body, created, author } = response;
+    console.log(response);
+    const {
+      title,
+      body,
+      created,
+      author: { name },
+    } = response;
     postContainer.innerHTML = `
   <div class="card p-3">
     <div class="row">
-      <p class="col">By ${author.name}</p>
+      <p class="col">By ${name}</p>
       <div class="col text-end">${new Date(created).toLocaleDateString(
         "en-us",
         {
@@ -73,14 +79,15 @@ apiCall(
         </svg>
       </div>
     </div>
-    ${deleteHTML(getUser().name, author.name)}
+    ${deleteHTML(getUser().name, name)}
     </div>    
   </div>`;
   })
   .then(() => {
     const deleteBtn = document.querySelector(".delete");
-
-    deleteBtn.onclick = () => {
-      deletePost(id, token);
-    };
+    if (deleteBtn) {
+      deleteBtn.onclick = () => {
+        deletePost(id, token);
+      };
+    }
   });
